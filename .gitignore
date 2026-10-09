@@ -1,8 +1,17 @@
 # Dependencies
 /node_modules
 
+# Locks
+package-lock.json
+
 # Testing
-/test
+/tests
 
 # Environment Variables
 .env
+
+# Build Output
+/dist
+
+# Sql Database
+*.sql
