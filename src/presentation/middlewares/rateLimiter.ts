@@ -1,13 +1,6 @@
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
-import { createClient } from 'redis';
-import { env } from '../../config/env';
-
-// Cliente Redis dedicado para el rate limiter
-const redisClient = createClient({
-  url: `redis://${env.redis.host}:${env.redis.port}`
-});
-redisClient.connect().catch(console.error);
+import { redisClient } from '../../infrastructure/redis/redisClient';
 
 export const reserveLimiter = rateLimit({
   store: new RedisStore({
