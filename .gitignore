@@ -7,11 +7,5 @@ package-lock.json
 # Testing
 /tests
 
-# Environment Variables
-.env
-
 # Build Output
 /dist
-
-# Sql Database
-*.sql
