@@ -1,0 +1,8 @@
+# Dependencies
+/node_modules
+
+# Testing
+/test
+
+# Environment Variables
+.env
