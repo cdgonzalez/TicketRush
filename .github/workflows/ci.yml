@@ -1,0 +1,75 @@
+name: CI Pipeline - TicketRush
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: ticketrush_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Static Analysis (Linting & Formatting)
+      run: |
+        npm run lint
+        npm run format:check
+
+    - name: Unit Tests & Coverage
+      run: npm run test:coverage
+      env:
+        CI: true
+
+    - name: BDD / Cucumber Tests (Pepinillos)
+      run: npm run test:bdd
+      env:
+        DB_HOST: localhost
+        DB_USER: test_user
+        DB_PASSWORD: test_password
+        DB_NAME: ticketrush_test
+        REDIS_HOST: localhost
+
+    - name: Mutation Testing (Stryker)
+      run: npm run test:mutation
+
+  docker-build:
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Build Production Image
+      run: docker build -t ticketrush/api:latest .
