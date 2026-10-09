@@ -9,7 +9,7 @@ export class HealthController {
     private readonly redisClient: RedisClientType
   ) {}
 
-  check = async (req: Request, res: Response): Promise<void> => {
+  check = async (_req: Request, res: Response): Promise<void> => {
     try {
       // Verificar conexión a PostgreSQL
       const pgStart = Date.now();

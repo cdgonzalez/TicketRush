@@ -24,7 +24,7 @@ export const metricsMiddleware = (req: Request, res: Response, next: NextFunctio
   next();
 };
 
-export const metricsEndpoint = async (req: Request, res: Response): Promise<void> => {
+export const metricsEndpoint = async (_req: Request, res: Response): Promise<void> => {
   res.set('Content-Type', promClient.register.contentType);
   res.end(await promClient.register.metrics());
 };
