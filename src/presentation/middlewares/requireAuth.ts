@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { env } from '../../config/env';
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { env } from "../../config/env";
 
 export interface AuthPayload {
   userId: string;
@@ -15,28 +15,34 @@ declare global {
   }
 }
 
-export const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
+export const requireAuth = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({ error: 'Authentication required' });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Authentication required" });
     return;
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
 
   try {
     const payload = jwt.verify(token, env.jwtSecret) as AuthPayload;
     req.user = payload;
-    
+
     // Authorization Check: Prevenir que un usuario reserve a nombre de otro
     if (req.body.userId && req.body.userId !== payload.userId) {
-      res.status(403).json({ error: 'Forbidden: Cannot reserve for another user' });
+      res
+        .status(403)
+        .json({ error: "Forbidden: Cannot reserve for another user" });
       return;
     }
-    
+
     next();
   } catch {
-    res.status(401).json({ error: 'Invalid or expired token' });
+    res.status(401).json({ error: "Invalid or expired token" });
   }
 };

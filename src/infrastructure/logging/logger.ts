@@ -1,8 +1,8 @@
-import pino from 'pino';
-import { env } from '../../config/env';
+import pino from "pino";
+import { env } from "../../config/env";
 
 export const logger = pino({
-  level: env.nodeEnv === 'development' ? 'debug' : 'info',
+  level: env.nodeEnv === "development" ? "debug" : "info",
   formatters: {
     level: (label) => {
       return { level: label.toUpperCase() };

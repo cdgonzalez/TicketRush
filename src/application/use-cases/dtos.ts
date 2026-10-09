@@ -7,4 +7,3 @@ export interface ReserveTicketResponse {
   ticketId: string;
   reservedUntil: Date;
 }
-
