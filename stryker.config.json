@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "reporters": ["clear-text"],
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "npm test -- --bail"
+  },
+  "concurrency": 2,
+  "coverageAnalysis": "off",
+  "mutate": [
+    "src/domain/entities/Ticket.ts",
+    "src/application/use-cases/ReserveTicketUseCase.ts"
+  ],
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": 50
+  }
+}
